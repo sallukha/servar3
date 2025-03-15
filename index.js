@@ -5,7 +5,8 @@ require('./db/config')
 const model = require('./model/user_model')
 
 app.use(express.json())
-app.use(cors())
+app.use(cors(
+))
 
 const port = 3000
 
@@ -15,7 +16,7 @@ app.post("/log_in", async (req, res) => {
 
     try {
         const user = await model.findOne({ email, password })
-        
+
         if (!user) {
             return res.status(404).json({ message: "Invalid user credentials" })
         }
@@ -37,7 +38,7 @@ app.post('/sign_up', async (req, res) => {
             return res.status(400).json({ message: "Email is already in use" })
         }
 
-        const newUser = new model({ username, name, email, password, cPassword })
+        const newUser = new model({ username, email, password, cPassword })
         const data = await newUser.save()
 
         res.status(201).json({ message: "Signup successful", data })
@@ -46,6 +47,7 @@ app.post('/sign_up', async (req, res) => {
         res.status(500).json({ message: "An error occurred during signup", error: error.message })
     }
 })
+
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
